@@ -17,5 +17,7 @@ passport.use(new OAuth2Strategy({
     }
 )
 
+app.get('/auth', passport.authenticate('oauth2'))
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT)
