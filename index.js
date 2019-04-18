@@ -1,7 +1,11 @@
 const express = require('express')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2')
-const keys = require('./config/keys')
+// const keys = require('./config/keys')
+const keys = {
+    helpscoutClientID: '94080494c1464f2c8f9b9d39adfacce2',
+    helpscoutClientSecret: '264424344f514ea8be89e1cca7353076'
+}
 
 const app = express()
 
