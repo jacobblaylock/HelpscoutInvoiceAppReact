@@ -6,8 +6,6 @@ const keys = {
     helpscoutClientSecret: '264424344f514ea8be89e1cca7353076'
 }
 
-const ROOT = 'https://mighty-journey-28056.herokuapp.com'
-
 const app = express()
 
 passport.use(new OAuth2Strategy({
@@ -22,11 +20,11 @@ passport.use(new OAuth2Strategy({
     }
 ))
 
-app.get(ROOT + '/', (req, res) => res.send({hi: 'testing OAuth2 with Helpscout ... Good Luck!'}))
+app.get('/', (req, res) => res.send({hi: 'testing OAuth2 with Helpscout ... Good Luck!'}))
 
-app.get(ROOT + '/auth/example', passport.authenticate('oauth2'))
+app.get('/auth/example', passport.authenticate('oauth2'))
 
-app.get(ROOT + '/auth/example/callback',
+app.get('/auth/example/callback',
   passport.authenticate('oauth2', { failureRedirect: '/login' }),
   function(req, res) {
       console.log(res)
