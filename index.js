@@ -14,11 +14,11 @@ passport.use(new OAuth2Strategy({
         tokenURL: 'https://api.helpscout.net/v2/oauth2/token',
         clientID: keys.helpscoutClientID,
         clientSecret: keys.helpscoutClientSecret,        
-        callbackURL: "https://mighty-journey-28056.herokuapp.com/auth/example/callback",
-        passReqToCallback: true
+        callbackURL: "https://mighty-journey-28056.herokuapp.com/auth/example/callback"
+        // callbackURL: "http://127.0.0.1:5000/auth/example/callback"
     },
     accessToken => {
-        console.log(accessToken)
+        console.log('Hello')
     }
 ))
 
@@ -27,11 +27,8 @@ app.get('/', (req, res) => res.send({hi: 'testing OAuth2 with Helpscout ... Good
 app.get('/auth/example', passport.authenticate('oauth2'))
 
 app.get('/auth/example/callback',
-  passport.authenticate('oauth2', { failureRedirect: '/login' }),
-  function(req, res) {
-    console.log(req.query.code)
-    res.redirect('/login')
-  })
+  passport.authenticate('oauth2')
+)
 // app.get('/auth/example/callback', (req, res) => {
 //     // console.log(req)
 //     res.send({code: req.query.code})
