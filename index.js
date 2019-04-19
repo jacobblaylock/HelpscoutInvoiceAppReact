@@ -20,6 +20,10 @@ passport.use(new OAuth2Strategy({
     }
 ))
 
+app.get('/', {hi: 'Testing OAuth2 connection to Helpscout'})
+
+app.get('/auth/example', passport.authenticate('oauth2'))
+
 app.get('/auth/example/callback',
   passport.authenticate('oauth2', { failureRedirect: '/login' }),
   function(req, res) {
