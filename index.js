@@ -20,7 +20,7 @@ passport.use(new OAuth2Strategy({
     }
 ))
 
-app.get('/', () => res.send({hi: 'testing OAuth2 with Helpscout...Good Luck!'}))
+app.get('/', (req, res) => res.send({hi: 'testing OAuth2 with Helpscout...Good Luck!'}))
 
 app.get('/auth/example', passport.authenticate('oauth2'))
 
