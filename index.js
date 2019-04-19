@@ -14,11 +14,11 @@ passport.use(new OAuth2Strategy({
         clientID: keys.helpscoutClientID,
         clientSecret: keys.helpscoutClientSecret,
         callbackURL: "/auth/callback"
-    }),
+    },
     accessToken => {
         console.log(accessToken)
     }
-)
+))
 
 app.get('/auth/example/callback',
   passport.authenticate('oauth2', { failureRedirect: '/login' }),
