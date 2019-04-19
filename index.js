@@ -5,6 +5,7 @@ const keys = {
     helpscoutClientID: '94080494c1464f2c8f9b9d39adfacce2',
     helpscoutClientSecret: '264424344f514ea8be89e1cca7353076'
 }
+const CircularJSON = require('circular-json')
 
 const app = express()
 
@@ -37,7 +38,7 @@ app.get('/auth/example', passport.authenticate('oauth2', {
 //   })
 app.get('/auth/example/callback', (req, res) => {
     // console.log(req)
-    res.send(JSON.stringify(req))
+    res.send(CircularJSON.stringify(req))
 })
 
   app.get('/login', (req, res) => res.send({login: 'login'}))
