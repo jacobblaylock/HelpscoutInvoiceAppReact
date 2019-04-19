@@ -31,6 +31,7 @@ app.get('/auth/example/callback',
   function(req, res) {
     console.log(req)
     res.send({code: req.query.code})
+    res.redirect('/login')
   })
 // app.get('/auth/example/callback', (req, res) => {
 //     // console.log(req)
