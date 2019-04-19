@@ -29,8 +29,7 @@ app.get('/auth/example', passport.authenticate('oauth2'))
 app.get('/auth/example/callback',
   passport.authenticate('oauth2', { failureRedirect: '/login' }),
   function(req, res) {
-    console.log(req)
-    res.send({code: req.query.code})
+    console.log(req.query.code)
     res.redirect('/login')
   })
 // app.get('/auth/example/callback', (req, res) => {
