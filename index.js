@@ -38,7 +38,7 @@ app.get('/auth/example', passport.authenticate('oauth2', {
 //   })
 app.get('/auth/example/callback', (req, res) => {
     // console.log(req)
-    res.send(CircularJSON.stringify(req))
+    res.send({code: req.query.code})
 })
 
   app.get('/login', (req, res) => res.send({login: 'login'}))
