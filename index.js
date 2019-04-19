@@ -20,10 +20,13 @@ passport.use(new OAuth2Strategy({
     }
 )
 
-app.get('/auth', passport.authenticate('oauth2', { failureRedirect: '/login' }), (req, res) => {
-    console.log(res)
-    res.redirect('/')
-})
+app.get('/auth/example/callback',
+  passport.authenticate('oauth2', { failureRedirect: '/login' }),
+  function(req, res) {
+      console.log(res)
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  })
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT)
