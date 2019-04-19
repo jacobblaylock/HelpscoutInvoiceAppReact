@@ -36,8 +36,8 @@ app.get('/auth/example', passport.authenticate('oauth2', {
 //     res.redirect('/');
 //   })
 app.get('/auth/example/callback', (req, res) => {
-    console.log(req)
-    res.send('hello')
+    // console.log(req)
+    res.send(JSON.stringify(req))
 })
 
   app.get('/login', (req, res) => res.send({login: 'login'}))
