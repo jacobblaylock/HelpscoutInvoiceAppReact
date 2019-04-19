@@ -27,12 +27,12 @@ app.get('/', (req, res) => res.send({hi: 'testing OAuth2 with Helpscout ... Good
 app.get('/auth/example', passport.authenticate('oauth2'))
 
 app.get('/auth/example/callback',
-  passport.authenticate('oauth2', { failureRedirect: '/login' }),
+  passport.authenticate('oauth2', { failureRedirect: '/login' },
   function(req, res) {
       console.log(req)
     // Successful authentication, redirect home.
     res.redirect('/');
-  })
+  }))
 // app.get('/auth/example/callback', (req, res) => {
 //     // console.log(req)
 //     res.send({code: req.query.code})
