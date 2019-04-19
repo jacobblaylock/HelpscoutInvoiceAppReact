@@ -11,6 +11,8 @@ const app = express()
 passport.use(new OAuth2Strategy({
         authorizationURL: 'https://secure.helpscout.net/authentication/authorizeClientApplication',
         tokenURL: 'https://api.helpscout.net/v2/oauth2/token',
+        clientID: keys.helpscoutClientID,
+        clientSecret: keys.helpscoutClientSecret,        
         callbackURL: "/auth/example/callback"
     },
     accessToken => {
