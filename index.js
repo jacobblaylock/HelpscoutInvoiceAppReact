@@ -28,13 +28,19 @@ app.get('/auth/example', passport.authenticate('oauth2', {
     clientSecret: keys.helpscoutClientSecret,
 }))
 
-app.get('/auth/example/callback',
-  passport.authenticate('oauth2', { failureRedirect: '/login' }),
-  function(req, res) {
-      console.log(res)
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  })
+// app.get('/auth/example/callback',
+//   passport.authenticate('oauth2', { failureRedirect: '/login' }),
+//   function(req, res) {
+//       console.log(res)
+//     // Successful authentication, redirect home.
+//     res.redirect('/');
+//   })
+app.get('/auth/example/callback', (req, res) => {
+    console.log(req)
+    res.send('hello')
+})
+
+  app.get('/login', (req, res) => res.send({login: 'login'}))
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT)
