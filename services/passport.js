@@ -12,7 +12,7 @@ passport.use(new OAuth2Strategy({
     clientID: keys.helpscoutClientID,
     clientSecret: keys.helpscoutClientSecret,
     // callbackURL: "https://mighty-journey-28056.herokuapp.com/auth/example/callback"
-    callbackURL: "http://127.0.0.1:5000/auth/example/callback"
+    callbackURL: "/auth/example/callback"
 },
     (accessToken, refreshToken, profile, done) => {
         var helpscoutConfig = {
