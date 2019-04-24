@@ -23,19 +23,6 @@ class Header extends Component {
         helpscoutConfig: { hi: "Hello"}
     }
 
-    handleLogin = event => {
-        console.log('logging in')
-        fetch('/auth/example')
-        .then(results => results.json())
-        .then(data => {
-            this.setState({ 
-                login: true, 
-                helpscoutConfig: data 
-            })
-            
-        })
-    }
-
     render() {
         const { classes } = this.props
         return (
@@ -45,7 +32,7 @@ class Header extends Component {
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Gestalt Diagnostics Helpscout Invoice Import
                         </Typography>
-                        <Button color="inherit" onClick={this.handleLogin}>Login via Helpscout</Button>
+                        <Button color="inherit" href='/auth/example'>Login via Helpscout</Button>
                     </Toolbar>
                 </AppBar>
                 <p>{JSON.stringify(this.state.helpscoutConfig)}</p>
