@@ -18,11 +18,6 @@ const styles = {
 
 class Header extends Component {
 
-    state = {
-        login: false,
-        helpscoutConfig: { hi: "Hello"}
-    }
-
     render() {
         const { classes } = this.props
         return (
@@ -35,7 +30,6 @@ class Header extends Component {
                         <Button color="inherit" href='/auth/example'>Login via Helpscout</Button>
                     </Toolbar>
                 </AppBar>
-                <p>{JSON.stringify(this.state.helpscoutConfig)}</p>
             </div>
         )
     }

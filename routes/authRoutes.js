@@ -11,7 +11,7 @@ module.exports = app => {
         passport.authenticate('oauth2', { session: false, failureRedirect: '/login' }),
         (req, res) => {
             promisify(fs.writeFile)('./temp/helpscoutConfig.json', JSON.stringify(req.user))
-            .then(data => res.redirect('/surveys'))
+            .then(data => res.redirect('/main'))
         }
     )
     
