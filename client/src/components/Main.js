@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Typography, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getAuth, getMailboxes } from '../actions'
+import { getAuth, getMailboxes, listConversations } from '../actions'
 
 
 
@@ -28,10 +28,6 @@ class Main extends Component {
     this.props.loadAuth()
   }
 
-  buttonClick = (auth) => {
-    this.props.loadMailbox(auth)
-  }
-
   render() {
     console.log(this.props)
     const { classes } = this.props
@@ -48,7 +44,11 @@ class Main extends Component {
           </Typography>
           <Button color="primary" variant="contained" onClick={() => this.props.loadMailbox(auth)}>Get Mailbox</Button>         
           <Typography component="p">
-            Here is the Mailbox Data:  {JSON.stringify(this.props.helpscout)}
+            Here is the Mailbox Data:  {JSON.stringify(this.props.helpscout.mailboxes)}
+          </Typography>
+          <Button color="primary" variant="contained" onClick={() => this.props.loadConversations(auth)}>Get Conversations</Button>   
+          <Typography>
+            Here is the Conversation Data: {JSON.stringify(this.props.helpscout.conversations)}
           </Typography>
         </Paper>
       </div>
@@ -70,7 +70,8 @@ function mapStateToProps({ auth, helpscout }, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     loadAuth: () => dispatch(getAuth()),
-    loadMailbox: (auth) => dispatch(getMailboxes(auth))
+    loadMailbox: (auth) => dispatch(getMailboxes(auth)),
+    loadConversations: (auth) => dispatch(listConversations(auth))
   }
 }
 
