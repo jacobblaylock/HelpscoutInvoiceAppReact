@@ -33,8 +33,8 @@ const styles = theme => ({
 
 class Main extends Component {
   state = {
-    startDate: '2019-04-01',
-    endDate: '2019-05-01'
+    startDate: '2019-05-01',
+    endDate: '2019-06-01'
   }
 
   handleDates = (e) => {

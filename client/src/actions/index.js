@@ -24,18 +24,42 @@ export const listConversations = (authHeader, params) => {
     return function(dispatch) {
         axios.get('/conversations', { ...authHeader, params })
             .then(res => {
-                console.log(JSON.stringify(res))
-                dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data._embedded.conversations.map(convo => {
-                    return {
-                        id: convo.id,
-                        number: convo.number,
-                        status: convo.status,
-                        assignee: convo.assignee,
-                        customFields: convo.customFields,
-                        subject: convo.subject,
-                        preview: convo.preview
-                    }
-                })})
+                return { ...res.data.page, link: res.data._links.page.href }
+                // dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data._embedded.conversations.map(convo => {
+                //     return {
+                //         id: convo.id,
+                //         number: convo.number,
+                //         status: convo.status,
+                //         assignee: convo.assignee,
+                //         customFields: convo.customFields,
+                //         subject: convo.subject,
+                //         preview: convo.preview
+                //     }
+                // })})
+            })
+            .then(res => {
+                let links = []
+                for(let i = 1; i <= res.totalPages; i++) {
+                    links.push(`${res.link}&page=${i}`)
+                }
+                axios.all(links.map(link => axios.get(link, { headers: authHeader.headers })))
+                .then(res => {
+                    let conversations = res.reduce((acc, cur) => {
+                        let conversation = cur.data._embedded.conversations
+                        return [ ...acc, ...conversation ]
+                    }, [])
+                    dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: conversations.map(convo => {
+                        return {
+                            id: convo.id,
+                            number: convo.number,
+                            status: convo.status,
+                            assignee: convo.assignee,
+                            customFields: convo.customFields,
+                            subject: convo.subject,
+                            preview: convo.preview
+                        }
+                    })})
+                })
             })
     }
 }
