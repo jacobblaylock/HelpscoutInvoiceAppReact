@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { Paper, Typography, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { getAuth, getMailboxes, listConversations } from '../actions'
+import TicketTable from '../components/TicketTable'
 
 
 
@@ -63,7 +64,6 @@ class Main extends Component {
     const isoEndDate = new Date(endDate)
     const offset = new Date().getTimezoneOffset()
 
-    console.log(isoStartDate.toISOString() + ' - ' + isoEndDate.toISOString() + ' offset = ' + offset)
     let params = {
       mailbox: 79656,
       status: 'all',
@@ -73,20 +73,13 @@ class Main extends Component {
   }
 
   render() {
-    console.log(this.props)
-    const { classes, auth } = this.props
+    const { classes, auth, helpscout } = this.props
     const { startDate, endDate } = this.state
 
 
     return (
       <div>
         <Paper className={classes.root} elevation={1}>
-          <Typography variant="h5" component="h3">
-            This is a sheet of paper.
-          </Typography>
-          <Typography component="p">
-            Here is the accessToken:  {JSON.stringify(auth)}
-          </Typography>
           <form className={classes.container} noValidate>
             <TextField
               id="date"
@@ -112,9 +105,12 @@ class Main extends Component {
             />
           </form>
           <Button color="primary" variant="contained" onClick={this.handleSubmit}>Get Conversations</Button>
-          <Typography>
-            Here is the Conversation Data: {JSON.stringify(this.props.helpscout.conversations)}
-          </Typography>
+          {helpscout.conversations &&
+            <div>
+              <TicketTable/>
+            </div>
+          }
+          
         </Paper>
       </div>
     )
