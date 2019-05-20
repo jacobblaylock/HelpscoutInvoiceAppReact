@@ -3,6 +3,7 @@ import * as actionTypes from '../actions/types'
 export default function(state = {}, action) {
     const { mailboxes } = action
     const { conversations } = action
+    const { threads } = action
     
     switch ( action.type ) {
         case actionTypes.GET_MAILBOXES :
@@ -14,6 +15,11 @@ export default function(state = {}, action) {
             return {
                 ...state,
                 conversations
+            }
+        case actionTypes.GET_THREADS :
+            return {
+                ...state,
+                threads
             }
         default:
             return state

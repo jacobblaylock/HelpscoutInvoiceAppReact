@@ -26,7 +26,6 @@ class SimpleTable extends Component {
 
     render() {
         const { classes, stats } = this.props
-        console.log(JSON.stringify(stats))
 
         return (
             <div>
@@ -65,7 +64,6 @@ function mapStateToProps({ helpscout }, ownProps) {
             let i = acc.findIndex(a => a.user === user)
             let hours = cur.customFields.find(f => f.id === billableHoursId) ? cur.customFields.find(f => f.id === billableHoursId).value : 0
             if (hours === '') hours = 0
-            console.log(hours)
 
             if (i > -1) {
                 acc[i].tickets = acc[i].tickets + 1

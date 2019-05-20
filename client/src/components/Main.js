@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import { Paper, Typography, Button, TextField } from '@material-ui/core'
+import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getAuth, getMailboxes, listConversations } from '../actions'
+import { getAuth, getMailboxes, listConversations, getThreads } from '../actions'
 import TicketTable from '../components/TicketTable'
 
 
@@ -62,7 +62,6 @@ class Main extends Component {
     const { startDate, endDate } = this.state
     const isoStartDate = new Date(startDate)
     const isoEndDate = new Date(endDate)
-    const offset = new Date().getTimezoneOffset()
 
     let params = {
       mailbox: 79656,
@@ -72,8 +71,16 @@ class Main extends Component {
     this.props.loadConversations(auth, params)
   }
 
+  handleThreads = () => {
+    const { auth, helpscout } = this.props
+    console.log(JSON.stringify(helpscout.conversations))
+    // Get list of thread links
+    let links = helpscout.conversations.map(convo => convo.threadLink)
+    this.props.loadThreads(auth, links)
+  }
+
   render() {
-    const { classes, auth, helpscout } = this.props
+    const { classes, helpscout } = this.props
     const { startDate, endDate } = this.state
 
 
@@ -108,9 +115,14 @@ class Main extends Component {
           {helpscout.conversations &&
             <div>
               <TicketTable/>
+              <Button color="primary" variant="contained" onClick={this.handleThreads}>Get Threads</Button>
             </div>
           }
-          
+          {helpscout.threads &&
+            <div>
+              {JSON.stringify(helpscout.threads)}
+            </div>
+          }
         </Paper>
       </div>
     )
@@ -132,7 +144,8 @@ function mapDispatchToProps(dispatch) {
   return {
     loadAuth: () => dispatch(getAuth()),
     loadMailbox: (auth) => dispatch(getMailboxes(auth)),
-    loadConversations: (auth, params) => dispatch(listConversations(auth, params))
+    loadConversations: (auth, params) => dispatch(listConversations(auth, params)),
+    loadThreads: (auth, links) => dispatch(getThreads(auth, links))
   }
 }
 

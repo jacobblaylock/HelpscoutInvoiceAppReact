@@ -5,6 +5,7 @@ export const getAuth = () => {
     return function(dispatch) {
         axios.get('api/accessToken')
             .then(res => {
+                console.log(res.data)
                 dispatch({ type: actionTypes.GET_AUTH, helpscoutHeader: res.data})
             })
     }
@@ -25,17 +26,6 @@ export const listConversations = (authHeader, params) => {
         axios.get('/conversations', { ...authHeader, params })
             .then(res => {
                 return { ...res.data.page, link: res.data._links.page.href }
-                // dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data._embedded.conversations.map(convo => {
-                //     return {
-                //         id: convo.id,
-                //         number: convo.number,
-                //         status: convo.status,
-                //         assignee: convo.assignee,
-                //         customFields: convo.customFields,
-                //         subject: convo.subject,
-                //         preview: convo.preview
-                //     }
-                // })})
             })
             .then(res => {
                 let links = []
@@ -56,10 +46,25 @@ export const listConversations = (authHeader, params) => {
                             assignee: convo.assignee,
                             customFields: convo.customFields,
                             subject: convo.subject,
-                            preview: convo.preview
+                            preview: convo.preview,
+                            threadLink: convo._links.threads.href
                         }
                     })})
                 })
             })
     }
 }
+
+export const getThreads = (authHeader, links) => {
+    return function(dispatch) {
+        axios.all(links.map(link => axios.get(link, { headers: authHeader.headers })))
+            .then(res => {
+                let threads = res.reduce((acc, cur) => {
+                    let thread = cur.data._embedded.threads
+                    return [ ...acc, ...thread ]
+                }, [])                
+                dispatch({ type: actionTypes.GET_THREADS, threads: threads})
+            })
+    }
+}
+
