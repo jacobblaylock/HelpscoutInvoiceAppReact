@@ -73,7 +73,6 @@ class Main extends Component {
 
   handleThreads = () => {
     const { auth, helpscout } = this.props
-    console.log(JSON.stringify(helpscout.conversations))
     // Get list of thread links
     let links = helpscout.conversations.map(convo => convo.threadLink)
     this.props.loadThreads(auth, links)

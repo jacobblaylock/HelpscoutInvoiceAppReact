@@ -21,10 +21,10 @@ export const getMailboxes = (authHeader) => {
 }
 
 export const listConversations = (authHeader, params) => {
-    console.log(JSON.stringify(params))
     return function(dispatch) {
         axios.get('/conversations', { ...authHeader, params })
             .then(res => {
+                console.log(res)
                 return { ...res.data.page, link: res.data._links.page.href }
             })
             .then(res => {
@@ -57,14 +57,21 @@ export const listConversations = (authHeader, params) => {
 
 export const getThreads = (authHeader, links) => {
     return function(dispatch) {
-        axios.all(links.map(link => axios.get(link, { headers: authHeader.headers })))
+        axios.all(links.map(link => axios.post('api/thread', { link, headers: authHeader.headers})))        
             .then(res => {
+                console.log(res)
                 let threads = res.reduce((acc, cur) => {
-                    let thread = cur.data._embedded.threads
+                    let thread = cur.data
                     return [ ...acc, ...thread ]
-                }, [])                
+                }, [])
                 dispatch({ type: actionTypes.GET_THREADS, threads: threads})
+            })
+            .catch(error => {
+                console.log(error)
+                return error
             })
     }
 }
+
+
 

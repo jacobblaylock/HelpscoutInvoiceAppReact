@@ -1,5 +1,5 @@
 const proxy = require('http-proxy-middleware')
  
 module.exports = function(app) {
-    app.use(proxy(['/auth/example', '/api/accessToken'], { target: 'http://localhost:5000' }));
+    app.use(proxy(['/auth/example', '/api/accessToken', '/api/thread'], { target: 'http://localhost:5000' }));
 }
