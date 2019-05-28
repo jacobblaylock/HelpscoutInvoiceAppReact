@@ -3,7 +3,7 @@ import * as actionTypes from './types'
 
 export const getAuth = () => {
     return function(dispatch) {
-        axios.get('api/accessToken')
+        axios.get('helpscout/accessToken')
             .then(res => {
                 console.log(res.data)
                 dispatch({ type: actionTypes.GET_AUTH, helpscoutHeader: res.data})
@@ -57,7 +57,7 @@ export const listConversations = (authHeader, params) => {
 
 export const getThreads = (authHeader, links) => {
     return function(dispatch) {
-        axios.all(links.map(link => axios.post('api/thread', { link, headers: authHeader.headers})))        
+        axios.all(links.map(link => axios.post('helpscout/thread', { link, headers: authHeader.headers})))        
             .then(res => {
                 console.log(res)
                 let threads = res.reduce((acc, cur) => {
