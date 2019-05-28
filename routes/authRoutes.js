@@ -12,15 +12,14 @@ axios.interceptors.response.use(response => {
     console.log(response.headers['x-ratelimit-remaining-minute'])
     return response
 }, error => {
-    console.log('Error Status: ' + error.response.status)
-    console.log(error.retry_after) // error.config.url, error.config.headers
     if (error.response.status === 429) {
+        console.log(`Error ${error.response.status}: ${error.response.data.message}. Retrying in ${error.response.data.retry_after} seconds`)
         let wait = ms => new Promise((resolve, reject) => setTimeout(resolve, ms))
-        return wait(60000).then(() => {
-            console.log('...retrying')
+        return wait(error.response.data.retry_after*1000).then(() => {
             return retryCall(error.config.url, { headers: { Authorization: error.config.headers.Authorization }}).then()
         })
     }else {
+        console.log(error.response.status)
         return Promise.reject(error);
     }
 })
