@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getAuth, getMailboxes, listConversations, getThreads } from '../actions'
+import { getMailboxes, listConversations, getThreads } from '../actions'
 import TicketTable from '../components/TicketTable'
 
 
@@ -46,7 +46,7 @@ class Main extends Component {
   }
 
   componentDidMount() {
-    this.props.loadAuth()
+
   }
 
   handleChange = (name) => event => {
@@ -58,7 +58,6 @@ class Main extends Component {
 
   handleSubmit = () => {
     // TODO: Validation
-    const { auth } = this.props
     const { startDate, endDate } = this.state
     const isoStartDate = new Date(startDate)
     const isoEndDate = new Date(endDate)
@@ -67,8 +66,8 @@ class Main extends Component {
       mailbox: 79656,
       status: 'all',
       query: `(modifiedAt:[${isoStartDate.toISOString()} TO ${isoEndDate.toISOString()}])`
-  }
-    this.props.loadConversations(auth, params)
+    }
+    this.props.loadConversations(params)
   }
 
   handleMailbox = () => {
@@ -76,10 +75,10 @@ class Main extends Component {
   }
 
   handleThreads = () => {
-    const { auth, helpscout } = this.props
+    const { helpscout } = this.props
     // Get list of thread links
     let links = helpscout.conversations.map(convo => convo.threadLink)
-    this.props.loadThreads(auth, links)
+    this.props.loadThreads(links)
   }
 
   render() {
@@ -90,11 +89,11 @@ class Main extends Component {
     return (
       <div>
         <Paper className={classes.root} elevation={1}>
-        <Button color="primary" variant="contained" onClick={this.handleMailbox}>Get Mailbox Details</Button>
+          <Button color="primary" variant="contained" onClick={this.handleMailbox}>Get Mailbox Details</Button>
           {helpscout.mailboxes &&
-              <div>
-                {JSON.stringify(helpscout.mailboxes)}
-              </div>
+            <div>
+              {JSON.stringify(helpscout.mailboxes)}
+            </div>
           }
           <form className={classes.container} noValidate>
             <TextField
@@ -123,7 +122,7 @@ class Main extends Component {
           <Button color="primary" variant="contained" onClick={this.handleSubmit}>Get Conversations</Button>
           {helpscout.conversations &&
             <div>
-              <TicketTable/>
+              <TicketTable />
               <Button color="primary" variant="contained" onClick={this.handleThreads}>Get Threads</Button>
             </div>
           }
@@ -142,19 +141,17 @@ Main.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-function mapStateToProps({ auth, helpscout }, ownProps) {
+function mapStateToProps({ helpscout }) {
   return {
-    auth,
     helpscout
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    loadAuth: () => dispatch(getAuth()),
     loadMailbox: () => dispatch(getMailboxes()),
-    loadConversations: (auth, params) => dispatch(listConversations(auth, params)),
-    loadThreads: (auth, links) => dispatch(getThreads(auth, links))
+    loadConversations: (params) => dispatch(listConversations(params)),
+    loadThreads: (links) => dispatch(getThreads(links))
   }
 }
 
