@@ -27,7 +27,7 @@ class Header extends Component {
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Gestalt Diagnostics Helpscout Invoice Import
                         </Typography>
-                        <Button color="inherit" href='/auth/example'>Login via Helpscout</Button>
+                        <Button color="inherit" href='/auth/helpscout'>Login via Helpscout</Button>
                     </Toolbar>
                 </AppBar>
             </div>

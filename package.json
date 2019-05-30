@@ -22,6 +22,7 @@
     "express": "^4.16.4",
     "nodemon": "^1.18.11",
     "passport": "^0.4.0",
-    "passport-oauth2": "^1.5.0"
+    "passport-oauth2": "^1.5.0",
+    "redux-devtools-extension": "^2.13.8"
   }
 }

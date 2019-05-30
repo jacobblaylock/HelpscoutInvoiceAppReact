@@ -71,6 +71,10 @@ class Main extends Component {
     this.props.loadConversations(auth, params)
   }
 
+  handleMailbox = () => {
+    this.props.loadMailbox()
+  }
+
   handleThreads = () => {
     const { auth, helpscout } = this.props
     // Get list of thread links
@@ -86,6 +90,12 @@ class Main extends Component {
     return (
       <div>
         <Paper className={classes.root} elevation={1}>
+        <Button color="primary" variant="contained" onClick={this.handleMailbox}>Get Mailbox Details</Button>
+          {helpscout.mailboxes &&
+              <div>
+                {JSON.stringify(helpscout.mailboxes)}
+              </div>
+          }
           <form className={classes.container} noValidate>
             <TextField
               id="date"
@@ -142,7 +152,7 @@ function mapStateToProps({ auth, helpscout }, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     loadAuth: () => dispatch(getAuth()),
-    loadMailbox: (auth) => dispatch(getMailboxes(auth)),
+    loadMailbox: () => dispatch(getMailboxes()),
     loadConversations: (auth, params) => dispatch(listConversations(auth, params)),
     loadThreads: (auth, links) => dispatch(getThreads(auth, links))
   }

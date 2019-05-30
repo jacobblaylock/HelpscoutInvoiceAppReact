@@ -1,19 +1,28 @@
 const passport = require('passport')
 const promisify = require('util').promisify
 const fs = require("fs")
+const axios = require('axios')
 
 module.exports = app => {
 
-    app.get('/auth/example', passport.authenticate('oauth2'))
+    app.get('/auth/helpscout', passport.authenticate('oauth2'))
 
     app.get(
-        '/auth/example/callback',
+        '/auth/helpscout/callback',
         passport.authenticate('oauth2', { session: false, failureRedirect: '/login' }),
         (req, res) => {
-            promisify(fs.writeFile)('./temp/helpscoutConfig.json', JSON.stringify(req.user))
-                .then(data => res.redirect('/main'))
+            // promisify(fs.writeFile)('./temp/helpscoutConfig.json', JSON.stringify(req.user))
+            //     .then(data => res.redirect('/main'))
+            axios.interceptors.request.use(function (config) {
+                console.log('REQUEST INTERCEPTED')
+                config.headers.Authorization = req.user.headers.Authorization
+                config.baseURL = req.user.baseURL
+                return config
+            }, function (error) {
+                // Do something with request error
+                return Promise.reject(error)
+            })
+            res.redirect('/main')
         }
     )
-
-    app.get('/login', (req, res) => res.send('Login Failed'))
 }

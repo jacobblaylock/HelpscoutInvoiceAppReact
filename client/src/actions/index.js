@@ -11,11 +11,11 @@ export const getAuth = () => {
     }
 }
 
-export const getMailboxes = (authHeader) => {
+export const getMailboxes = () => {
     return function(dispatch) {
-        axios.get('/mailboxes', authHeader)
+        axios.get('helpscout/mailboxes')
             .then(res => {
-                dispatch({ type: actionTypes.GET_MAILBOXES, mailboxes: res.data._embedded.mailboxes})
+                dispatch({ type: actionTypes.GET_MAILBOXES, mailboxes: res.data})
             })
     }
 }
@@ -24,7 +24,6 @@ export const listConversations = (authHeader, params) => {
     return function(dispatch) {
         axios.get('/conversations', { ...authHeader, params })
             .then(res => {
-                console.log(res)
                 return { ...res.data.page, link: res.data._links.page.href }
             })
             .then(res => {
@@ -59,7 +58,6 @@ export const getThreads = (authHeader, links) => {
     return function(dispatch) {
         axios.all(links.map(link => axios.post('helpscout/thread', { link, headers: authHeader.headers})))        
             .then(res => {
-                console.log(res)
                 let threads = res.reduce((acc, cur) => {
                     let thread = cur.data
                     return [ ...acc, ...thread ]
