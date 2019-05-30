@@ -89,7 +89,7 @@ class Main extends Component {
     return (
       <div>
         <Paper className={classes.root} elevation={1}>
-          <Button color="primary" variant="contained" onClick={this.handleMailbox}>Get Mailbox Details</Button>
+          {/* <Button color="primary" variant="contained" onClick={this.handleMailbox}>Get Mailbox Details</Button> */}
           {helpscout.mailboxes &&
             <div>
               {JSON.stringify(helpscout.mailboxes)}
@@ -119,16 +119,21 @@ class Main extends Component {
               }}
             />
           </form>
+          <br />
           <Button color="primary" variant="contained" onClick={this.handleSubmit}>Get Conversations</Button>
           {helpscout.conversations &&
             <div>
+              <br />
               <TicketTable />
+              <br />
               <Button color="primary" variant="contained" onClick={this.handleThreads}>Get Threads</Button>
+              <br />
             </div>
           }
           {helpscout.threads &&
             <div>
-              {JSON.stringify(helpscout.threads)}
+              <br />
+              {helpscout.threads.length} tickets loaded.
             </div>
           }
         </Paper>
