@@ -31,14 +31,22 @@ export const getThreads = (links) => {
       .then(res => {
         let threads = res.reduce((acc, cur) => {
           let thread = cur.data
-          return [...acc, thread]
+          return { ...acc, ...thread}
         }, [])
-        console.log(threads)
         dispatch({ type: actionTypes.GET_THREADS, threads: threads })
       })
       .catch(error => {
         console.log(error)
         return error
+      })
+  }
+}
+
+export const postThreads = (conversations) => {
+  return function (dispatch) {
+    axios.post('osticket/importTickets', conversations)
+      .then(res => {
+        dispatch({ type: actionTypes.POST_THREADS})
       })
   }
 }

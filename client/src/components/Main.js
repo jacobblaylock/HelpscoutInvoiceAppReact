@@ -3,10 +3,8 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getMailboxes, listConversations, getThreads } from '../actions'
+import { getMailboxes, listConversations, getThreads, postThreads } from '../actions'
 import TicketTable from '../components/TicketTable'
-
-
 
 const styles = theme => ({
   root: {
@@ -34,8 +32,8 @@ const styles = theme => ({
 
 class Main extends Component {
   state = {
-    startDate: '2019-05-01',
-    endDate: '2019-06-01'
+    startDate: '2019-06-03',
+    endDate: '2019-07-01'
   }
 
   handleDates = (e) => {
@@ -65,7 +63,8 @@ class Main extends Component {
     let params = {
       mailbox: 79656,
       status: 'all',
-      query: `(modifiedAt:[${isoStartDate.toISOString()} TO ${isoEndDate.toISOString()}])`
+      // query: `(modifiedAt:[${isoStartDate.toISOString()} TO ${isoEndDate.toISOString()}])`
+      number: 35136
     }
     this.props.loadConversations(params)
   }
@@ -79,6 +78,15 @@ class Main extends Component {
     // Get list of thread links
     let links = helpscout.conversations.map(convo => convo.threadLink)
     this.props.loadThreads(links)
+  }
+
+  handleTickets = () => {
+    const { helpscout } = this.props
+    this.props.importTickets(helpscout.conversations.map(c => {
+      console.log(helpscout.threads)
+      let threads = helpscout.threads[c.id]
+      return { ...c, threads: threads }
+    }))
   }
 
   render() {
@@ -134,6 +142,7 @@ class Main extends Component {
             <div>
               <br />
               {helpscout.threads.length} tickets loaded.
+              <Button color="primary" variant="contained" onClick={this.handleTickets}>Post Tickets</Button>
             </div>
           }
         </Paper>
@@ -156,7 +165,8 @@ function mapDispatchToProps(dispatch) {
   return {
     loadMailbox: () => dispatch(getMailboxes()),
     loadConversations: (params) => dispatch(listConversations(params)),
-    loadThreads: (links) => dispatch(getThreads(links))
+    loadThreads: (links) => dispatch(getThreads(links)),
+    importTickets: (conversations) => dispatch(postThreads(conversations))
   }
 }
 

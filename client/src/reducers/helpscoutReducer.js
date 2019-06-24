@@ -18,7 +18,11 @@ export default function(state = {}, action) {
             return {
                 ...state,
                 threads
-            }
+        }
+      case actionTypes.POST_THREADS:
+        return {
+          ...state
+        }
         default:
             return state
     }

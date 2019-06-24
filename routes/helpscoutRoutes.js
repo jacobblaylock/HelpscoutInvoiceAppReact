@@ -65,6 +65,9 @@ module.exports = app => {
                   id: convo.id,
                   number: convo.number,
                   status: convo.status,
+                  createdAt: convo.createdAt,
+                  closedAt: convo.closedAt,
+                  modifiedAt: convo.userUpdatedAt,
                   assignee: convo.assignee,
                   customFields: convo.customFields,
                   subject: convo.subject,
@@ -75,6 +78,9 @@ module.exports = app => {
             res.send(conversations)
           })
       })
+      .catch(error => {
+        console.log(error)
+    })
   })
 
   app.get('/helpscout/thread', (req, res) => {
