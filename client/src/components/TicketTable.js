@@ -29,7 +29,7 @@ class SimpleTable extends Component {
 
     return (
       <div>
-        <h2>Ticket Snapshot</h2>
+        <h2>Overview Of Tickets Selected For Import</h2>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>

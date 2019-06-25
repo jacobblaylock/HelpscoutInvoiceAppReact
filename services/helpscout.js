@@ -1,7 +1,6 @@
 // var filewriter = require('./filewriter');
 const mysql = require('mysql')
 const striptags = require('striptags')
-// var config = require('../../server.config.json')
 const config = require('../config/osticket')
 
 /**
@@ -35,7 +34,6 @@ Helpscout.prototype.reformatTicketBody = function (ticket) {
         '\n\n'
     }
   });
-  console.log(text)
   return text.replace(/'/g, "''")
 };
 
@@ -63,12 +61,15 @@ Helpscout.prototype.mysqlTestConnection = function (callback) {
     if (err) {
       console.log(err)
       callback({
-        message: err.message,
-        error: err
+        message: err.code,
+        connected: false
       })
     } else {
       connection.release();
-      callback('Connected')
+      callback({
+        message: 'Connected',
+        connected: true
+      })
     }
 
   });
@@ -124,7 +125,6 @@ Helpscout.prototype.insertTickets = function (callback) {
   var counter = this.threads.length;
   this.threads.forEach(function (ticket) {
     this.insertTicket(ticket, function (rows) {
-      //console.log(rows);
       counter--;
       if (counter === 0) {
         callback();

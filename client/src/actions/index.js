@@ -42,6 +42,15 @@ export const getThreads = (links) => {
   }
 }
 
+export const testDbConnection = () => {
+  return function (dispatch) {
+    axios.get('osticket/conn')
+      .then(res => {
+        dispatch({ type: actionTypes.DB_CONNECTION, dbConnection: res.data })
+      })
+  }
+}
+
 export const postThreads = (conversations) => {
   return function (dispatch) {
     axios.post('osticket/importTickets', conversations)
