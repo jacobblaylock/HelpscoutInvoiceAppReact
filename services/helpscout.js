@@ -2,6 +2,7 @@
 const mysql = require('mysql')
 const striptags = require('striptags')
 const config = require('../config/osticket')
+const iconv = require('iconv-lite')
 
 /**
  * Helpscout constructor function
@@ -25,7 +26,7 @@ Helpscout.prototype.reformatTicketBody = function (ticket) {
   ticket.forEach(function (thread) {
     if (thread.body && thread.state !== 'hidden') {
       text = text +
-        thread.createdAt + '  (' + thread.createdBy.firstName + ' ' + thread.createdBy.lastName + '):\n\n' +
+        thread.createdAt + '  (' + thread.createdBy.first + ' ' + thread.createdBy.last + '):\n\n' +
         striptags(thread.body.replace(/<br>/g, '\n'))
           .replace(/^\s+$/gm, '\n')
           .replace(/\n{3,10}/g, '\n')
@@ -33,8 +34,9 @@ Helpscout.prototype.reformatTicketBody = function (ticket) {
           .replace(/This transmission may contain information that is privileged, confidential and\/or exempt from disclosure under applicable law\. If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or use of the information contained herein \(including any reliance thereon\) is STRICTLY PROHIBITED\. If you received this transmission in error, please immediately contact the sender and destroy the material in its entirety, whether in electronic or hard copy format\. Thank you\./g, '') +
         '\n\n'
     }
-  });
-  return text.replace(/'/g, "''")
+  })
+  text = text.replace(/'/g, "''")
+  return iconv.encode(text,'latin1')
 };
 
 Helpscout.prototype.mysqlOpen = function () {
@@ -115,9 +117,11 @@ Helpscout.prototype.insertTicket = function (ticket, callback) {
     ticket.modifiedAt.replace(/T|Z/g, ' ') + "','" +
     this.reformatTicketBody(ticket.threads) + "','" +
     billableHours + "')"
-    // callback(query)
-  this.mysqlQuery(query, function(rows) {
-      callback(rows)
+  console.log(query)
+  // callback(query)
+  this.mysqlQuery(query, function (rows) {
+    console.log(rows)
+    callback(rows)
   })
 }
 
@@ -125,6 +129,7 @@ Helpscout.prototype.insertTickets = function (callback) {
   var counter = this.threads.length;
   this.threads.forEach(function (ticket) {
     this.insertTicket(ticket, function (rows) {
+      console.log(rows)
       counter--;
       if (counter === 0) {
         callback();

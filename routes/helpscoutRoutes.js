@@ -14,18 +14,36 @@ axios.interceptors.response.use(response => {
   if (error.response) {
     if (error.response.status === 429) {
       console.log(`Error: ${error.response.status} - ${error.response.data.message}. Retrying in ${error.response.data.retry_after} seconds`)
-      // TODO: Promisify setTimeout
       let wait = ms => new Promise((resolve, reject) => setTimeout(resolve, ms))
       return wait(error.response.data.retry_after * 1000).then(() => {
-        return retryCall(error.config.url, { headers: { Authorization: error.config.headers.Authorization } }).then()
+        return retryCall(error.config.url, { headers: { Authorization: error.config.headers.Authorization } })
+          .then()
+          .catch(Promise.reject(error))
       })
+    } else if (error.response.status === 401) {
+      console.log('AUTHORIZATION TOKEN EXPIRED')
+      return Promise.reject('Authorization Token Expired: ' + error)
     } else {
       console.log(`Error: ${error.response.status} - ${error.response.data.message}`)
       return Promise.reject(error)
     }
   } else {
-    console.log(error)
-    return Promise.reject(error);
+    if (error.code === 'ECONNREFUSED') {
+      console.log('ECONN WAS REFUSED')
+      promisify(fs.readFile)('./temp/helpscoutConfig.json', 'utf-8')
+        .then(file => {
+          let config = JSON.parse(file)
+          return retryCall(`${config.baseURL}${error.config.url}`, config.headers)
+            .then()
+            .catch(Promise.reject(error))
+        })
+        .catch(error => {
+          console.log(error)
+          Promise.reject(error)
+        })
+    } else {
+      return Promise.reject(error);
+    }
   }
 })
 
@@ -80,7 +98,7 @@ module.exports = app => {
       })
       .catch(error => {
         console.log(error)
-    })
+      })
   })
 
   app.get('/helpscout/thread', (req, res) => {
