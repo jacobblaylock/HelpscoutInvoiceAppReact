@@ -15,6 +15,7 @@ module.exports = app => {
     // console.log(req.body)
     hs.threads = req.body
     hs.insertTickets(function (cb) {
+      // console.log(cb)
       res.send(cb)
     })
   })

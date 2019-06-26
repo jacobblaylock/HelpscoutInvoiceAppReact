@@ -117,22 +117,22 @@ Helpscout.prototype.insertTicket = function (ticket, callback) {
     ticket.modifiedAt.replace(/T|Z/g, ' ') + "','" +
     this.reformatTicketBody(ticket.threads) + "','" +
     billableHours + "')"
-  console.log(query)
+  // console.log(query)
   // callback(query)
-  this.mysqlQuery(query, function (rows) {
-    console.log(rows)
-    callback(rows)
+  this.mysqlQuery(query, function (row) {
+    callback(row)
   })
 }
 
 Helpscout.prototype.insertTickets = function (callback) {
   var counter = this.threads.length;
+  var rows = []
   this.threads.forEach(function (ticket) {
-    this.insertTicket(ticket, function (rows) {
-      console.log(rows)
+    this.insertTicket(ticket, function (row) {
+      rows.push({ticketNumber: ticket.number, ...row})
       counter--;
       if (counter === 0) {
-        callback();
+        callback(rows);
       }
     })
   }, this)

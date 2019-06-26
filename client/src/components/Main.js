@@ -151,7 +151,6 @@ class Main extends Component {
                     <p>{dbConnection.message}</p>
                     <Button color="primary" variant="contained" onClick={this.handleDbConnectionTest}>Test Database Connection</Button>
                   </div>}
-
             </div>
           }
         </Paper>

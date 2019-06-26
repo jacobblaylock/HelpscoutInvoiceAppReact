@@ -55,7 +55,8 @@ export const postThreads = (conversations) => {
   return function (dispatch) {
     axios.post('osticket/importTickets', conversations)
       .then(res => {
-        dispatch({ type: actionTypes.POST_THREADS})
+        console.log(res.data)
+        dispatch({ type: actionTypes.POST_THREADS, dbResponse: res.data})
       })
   }
 }
