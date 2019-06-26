@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getMailboxes, listConversations, getThreads, postThreads, testDbConnection } from '../actions'
+import { getMailboxes, listConversations, getThreads, postThreads } from '../actions'
 import TicketTable from '../components/TicketTable'
+import Database from '../components/Database'
 
 const styles = theme => ({
   root: {
@@ -44,7 +45,7 @@ class Main extends Component {
   }
 
   componentDidMount() {
-    this.props.testDbConn()
+
   }
 
   handleChange = (name) => event => {
@@ -80,20 +81,8 @@ class Main extends Component {
     this.props.loadThreads(links)
   }
 
-  handleTickets = () => {
-    const { helpscout } = this.props
-    this.props.importTickets(helpscout.conversations.map(c => {
-      let threads = helpscout.threads[c.id]
-      return { ...c, threads: threads }
-    }))
-  }
-
-  handleDbConnectionTest = () => {
-    this.props.testDbConn()
-  }
-
   render() {
-    const { classes, helpscout, dbConnection } = this.props
+    const { classes, helpscout } = this.props
     const { startDate, endDate } = this.state
 
 
@@ -144,13 +133,7 @@ class Main extends Component {
           {helpscout.threads &&
             <div>
               <br />
-              {dbConnection.connected
-                ? <Button color="primary" variant="contained" onClick={this.handleTickets}>Post Tickets to OsTicket</Button>
-                : <div>
-                    <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost</p>
-                    <p>{dbConnection.message}</p>
-                    <Button color="primary" variant="contained" onClick={this.handleDbConnectionTest}>Test Database Connection</Button>
-                  </div>}
+              <Database />
             </div>
           }
         </Paper>
@@ -165,8 +148,7 @@ Main.propTypes = {
 
 function mapStateToProps({ helpscout, dbConnection }) {
   return {
-    helpscout,
-    dbConnection
+    helpscout
   }
 }
 
@@ -174,9 +156,7 @@ function mapDispatchToProps(dispatch) {
   return {
     loadMailbox: () => dispatch(getMailboxes()),
     loadConversations: (params) => dispatch(listConversations(params)),
-    loadThreads: (links) => dispatch(getThreads(links)),
-    importTickets: (conversations) => dispatch(postThreads(conversations)),
-    testDbConn: () => dispatch(testDbConnection())
+    loadThreads: (links) => dispatch(getThreads(links))
   }
 }
 
