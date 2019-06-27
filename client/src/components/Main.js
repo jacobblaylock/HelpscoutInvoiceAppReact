@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import CirularProgress from '@material-ui/core/CircularProgress'
 import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getMailboxes, listConversations, getThreads, postThreads } from '../actions'
+import { getMailboxes, listConversations, getThreads } from '../actions'
 import TicketTable from '../components/TicketTable'
 import Database from '../components/Database'
 
@@ -28,7 +29,14 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 200,
   },
+  progress: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'block',
+    width: '50%'
+  }
 });
+
 
 
 class Main extends Component {
@@ -64,8 +72,8 @@ class Main extends Component {
     let params = {
       mailbox: 79656,
       status: 'all',
-      // query: `(modifiedAt:[${isoStartDate.toISOString()} TO ${isoEndDate.toISOString()}])`
-      number: 35136
+      query: `(modifiedAt:[${isoStartDate.toISOString()} TO ${isoEndDate.toISOString()}])`
+      //number: 35136
     }
     this.props.loadConversations(params)
   }
@@ -130,14 +138,23 @@ class Main extends Component {
               <br />
             </div>
           }
-          {helpscout.threads &&
+          {helpscout.loadingThreads &&
             <div>
-              <br />
-              <Database />
+            <br />
+              {helpscout.loadingThreads.loaded === true
+                ?
+                <Database />
+                :
+                <div>
+                  <CirularProgress className={classes.progress} />
+                  <br />
+                  Loading {helpscout.loadingThreads.count} tickets.  Helpscout throttles API requests at 400 per minute, so this may take up to 1 minute for every 400 tickets.
+            </div>
+              }
             </div>
           }
         </Paper>
-      </div>
+      </div >
     )
   }
 }

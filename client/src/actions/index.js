@@ -25,14 +25,17 @@ export const listConversations = (params) => {
   }
 }
 
-export const getThreads = (links) => {
+export const getThreads = (links) => {  
   return function (dispatch) {
+    dispatch({ type: actionTypes.LOADING_THREADS, loaded: false, count: links.length })
     axios.all(links.map(link => axios.get('helpscout/thread', { params: { link } })))
       .then(res => {
         let threads = res.reduce((acc, cur) => {
+          
           let thread = cur.data
           return { ...acc, ...thread}
         }, [])
+        dispatch({ type: actionTypes.LOADING_THREADS, loaded: true, count: 0})
         dispatch({ type: actionTypes.GET_THREADS, threads: threads })
       })
       .catch(error => {
