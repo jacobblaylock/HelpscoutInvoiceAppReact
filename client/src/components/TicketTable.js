@@ -6,6 +6,7 @@ import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
+import TableFooter from '@material-ui/core/TableFooter'
 import TableRow from '@material-ui/core/TableRow'
 
 const styles = theme => ({
@@ -16,7 +17,7 @@ const styles = theme => ({
   },
   table: {
     minWidth: 700,
-  },
+  }
 })
 
 const billableHoursId = 1240
@@ -46,12 +47,14 @@ class SimpleTable extends Component {
                 <TableCell>{s.hours}</TableCell>
               </TableRow>
             ))}
+          </TableBody>
+          <TableFooter>
             <TableRow>
               <TableCell>TOTALS</TableCell>
               <TableCell>{totals.tickets}</TableCell>
               <TableCell>{totals.hours}</TableCell>
             </TableRow>
-          </TableBody>
+          </TableFooter>          
         </Table>
       </div>
     )
@@ -83,7 +86,7 @@ function mapStateToProps({ helpscout }, ownProps) {
   }, [])
 
   const totals = stats.reduce((acc, cur) => {
-    return { tickets: acc.tickets + cur.tickets, hours: (parseFloat(acc.hours) + parseFloat(cur.hours)).toFixed(2)}
+    return { tickets: acc.tickets + cur.tickets, hours: (parseFloat(acc.hours) + parseFloat(cur.hours)).toFixed(2) }
   }, { tickets: 0, hours: 0 })
   return {
     stats,
