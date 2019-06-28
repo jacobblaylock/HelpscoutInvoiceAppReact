@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import CirularProgress from '@material-ui/core/CircularProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { getMailboxes, listConversations, getThreads } from '../actions'
@@ -42,7 +42,9 @@ const styles = theme => ({
 class Main extends Component {
   state = {
     startDate: '2019-06-03',
-    endDate: '2019-07-01'
+    endDate: '2019-07-01',
+    conversationButtonDisabled: false,
+    threadButtonDisabled: false
   }
 
   handleDates = (e) => {
@@ -50,10 +52,6 @@ class Main extends Component {
       startDate: '',
       endDate: ''
     })
-  }
-
-  componentDidMount() {
-
   }
 
   handleChange = (name) => event => {
@@ -90,7 +88,7 @@ class Main extends Component {
   }
 
   render() {
-    const { classes, helpscout } = this.props
+    const { classes, helpscout, conversationButtonDisabled, threadButtonDisabled } = this.props
     const { startDate, endDate } = this.state
 
 
@@ -128,28 +126,39 @@ class Main extends Component {
             />
           </form>
           <br />
-          <Button color="primary" variant="contained" onClick={this.handleSubmit}>Get Tickets</Button>
-          {helpscout.conversations &&
+          <Button disabled={conversationButtonDisabled} color="primary" variant="contained" onClick={this.handleSubmit}>Get Tickets</Button>
+          {helpscout.loadingConversations &&
             <div>
-              <br />
-              <TicketTable />
-              <br />
-              <Button color="primary" variant="contained" onClick={this.handleThreads}>Get Ticket Details</Button>
-              <br />
+              {(helpscout.loadingConversations.loaded && helpscout.conversations)
+                ?
+                <div>
+                  <br />
+                  <TicketTable />
+                  <br />
+                  <Button disabled={threadButtonDisabled} color="primary" variant="contained" onClick={this.handleThreads}>Get Ticket Details</Button>
+                  <br />
+                </div>
+                :
+                <div>
+                  <CircularProgress className={classes.progress} />
+                  <br />
+                </div>
+              }
+
             </div>
           }
           {helpscout.loadingThreads &&
             <div>
-            <br />
-              {helpscout.loadingThreads.loaded === true
+              <br />
+              {helpscout.loadingThreads.loaded
                 ?
                 <Database />
                 :
                 <div>
-                  <CirularProgress className={classes.progress} />
+                  <CircularProgress className={classes.progress} />
                   <br />
                   Loading {helpscout.loadingThreads.count} tickets.  Helpscout throttles API requests at 400 per minute, so this may take up to 1 minute for every 400 tickets.
-            </div>
+                </div>
               }
             </div>
           }
@@ -164,8 +173,19 @@ Main.propTypes = {
 };
 
 function mapStateToProps({ helpscout, dbConnection }) {
+  let conversationButtonDisabled = false
+  let threadButtonDisabled = false
+
+  if (helpscout.loadingConversations) {
+    conversationButtonDisabled = helpscout.loadingConversations.loaded === false ? true : false
+  }
+  if (helpscout.loadingThreads) {
+    threadButtonDisabled = helpscout.loadingThreads.loaded === false ? true : false
+  }
   return {
-    helpscout
+    helpscout,
+    conversationButtonDisabled,
+    threadButtonDisabled
   }
 }
 

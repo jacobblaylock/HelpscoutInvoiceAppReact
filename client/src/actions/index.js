@@ -20,8 +20,13 @@ export const getMailboxes = () => {
 
 export const listConversations = (params) => {
   return function (dispatch) {
+    dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: false})
+    dispatch({ type: actionTypes.LOADING_THREADS })
     axios.get('helpscout/conversations', { params })
-      .then(res => dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data }))
+      .then(res => { 
+        dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: true})
+        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data })
+      })
   }
 }
 

@@ -9,6 +9,16 @@ export default function (state = {}, action) {
         ...state,
         mailboxes
       }
+    case actionTypes.LOADING_CONVERSATIONS:
+      return {
+        ...state,
+        loadingConversations: action.loaded !== undefined
+          ?
+          {
+            loaded: action.loaded
+          }
+          : undefined
+      }
     case actionTypes.LIST_CONVERSATIONS:
       return {
         ...state,
@@ -20,18 +30,22 @@ export default function (state = {}, action) {
         ...state,
         threads
       }
+    case actionTypes.LOADING_THREADS:
+      return {
+        ...state,
+        loadingThreads: action.loaded !== undefined
+          ?
+          {
+            loaded: action.loaded,
+            count: action.count
+          }
+          :
+          undefined
+      }
     case actionTypes.POST_THREADS:
       return {
         ...state,
         dbResponse
-      }
-    case actionTypes.LOADING_THREADS:
-      return {
-        ...state,
-        loadingThreads: {
-          loaded: action.loaded,
-          count: action.count
-        }
       }
     default:
       return state
