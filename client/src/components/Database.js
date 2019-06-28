@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux'
 import { testDbConnection, postThreads } from '../actions'
 
@@ -26,6 +27,12 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 200,
   },
+  progress: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'block',
+    width: '50%'
+  }
 });
 
 
@@ -48,16 +55,22 @@ class Database extends Component {
   }
 
   render() {
-    const { helpscout, dbConnection, dbResponseDetails } = this.props
+    const { classes, helpscout, dbConnection, dbResponseDetails, testingButtonDisabled } = this.props
 
     return (
       <div>
         {dbConnection.connected
           ? <Button color="primary" variant="contained" onClick={this.handleTickets}>Post Tickets to OsTicket</Button>
           : <div>
-            <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost</p>
-            <p>{dbConnection.message}</p>
-            <Button color="primary" variant="contained" onClick={this.handleDbConnectionTest}>Test Database Connection</Button>
+            {testingButtonDisabled
+              ? <CircularProgress className={classes.progress} />
+              :
+              <div>
+                <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost</p>
+                <p>{dbConnection.message}</p>
+              </div>
+            }
+            <Button disabled={testingButtonDisabled} color="secondary" variant="contained" onClick={this.handleDbConnectionTest}>Test Database Connection</Button>
           </div>}
         {helpscout.dbResponse &&
           <div>
@@ -93,10 +106,13 @@ function mapStateToProps({ helpscout, dbConnection }) {
     }, { successes: 0, errors: { count: 0, details: [] } })
   }
 
+  let testingButtonDisabled = dbConnection.testing === true ? true : false
+
   return {
     helpscout,
     dbConnection,
-    dbResponseDetails
+    dbResponseDetails,
+    testingButtonDisabled
   }
 }
 

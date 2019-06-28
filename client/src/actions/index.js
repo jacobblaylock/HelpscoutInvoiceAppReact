@@ -52,8 +52,10 @@ export const getThreads = (links) => {
 
 export const testDbConnection = () => {
   return function (dispatch) {
+    dispatch({ type: actionTypes.DB_CONNECTION_TEST, testing: true })    
     axios.get('osticket/conn')
       .then(res => {
+        dispatch({ type: actionTypes.DB_CONNECTION_TEST, testing: false })
         dispatch({ type: actionTypes.DB_CONNECTION, dbConnection: res.data })
       })
   }
@@ -63,7 +65,6 @@ export const postThreads = (conversations) => {
   return function (dispatch) {
     axios.post('osticket/importTickets', conversations)
       .then(res => {
-        console.log(res.data)
         dispatch({ type: actionTypes.POST_THREADS, dbResponse: res.data})
       })
   }
