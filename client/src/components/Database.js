@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import publicIp from 'public-ip'
 import { withStyles } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -39,6 +40,7 @@ const styles = theme => ({
 class Database extends Component {
 
   componentDidMount() {
+    (async () => { console.log(await publicIp.v4())})()
     this.props.testDbConn()
   }
 
@@ -70,7 +72,7 @@ class Database extends Component {
               ? <CircularProgress className={classes.progress} />
               :
               <div>
-                <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost</p>
+                <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost.  Check the console for your current IP.</p>
                 <p>{dbConnection.message}</p>
               </div>
             }
