@@ -76,7 +76,7 @@ module.exports = app => {
           .then(response => {
             let conversations = response.reduce((acc, cur) => {
               let conversation = cur.data._embedded.conversations
-              return [acc, conversation]
+              return [...acc, ...conversation]
             }, [])
               .map(convo => {
                 var clientId = convo.customFields.find(cf => cf.id === 1241)
