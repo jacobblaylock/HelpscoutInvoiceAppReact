@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 require('./services/passport')
 
 const app = express()
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '10mb', extended: true}))
 require('./routes/authRoutes')(app)
 require('./routes/helpscoutRoutes')(app)
 require('./routes/osticketRoutes')(app)

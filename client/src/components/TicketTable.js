@@ -20,7 +20,6 @@ const styles = theme => ({
   }
 })
 
-const billableHoursId = 1240
 
 class SimpleTable extends Component {
 
@@ -69,7 +68,7 @@ function mapStateToProps({ helpscout }, ownProps) {
   const stats = helpscout.conversations.reduce((acc, cur) => {
     let user = cur.assignee ? cur.assignee.first + ' ' + cur.assignee.last : 'unassigned'
     let i = acc.findIndex(a => a.user === user)
-    let hours = cur.customFields.find(f => f.id === billableHoursId) ? cur.customFields.find(f => f.id === billableHoursId).value : 0
+    let hours = cur.billableHours
     if (hours === '') hours = 0
 
     if (i > -1) {

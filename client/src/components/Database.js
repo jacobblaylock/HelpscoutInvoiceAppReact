@@ -48,19 +48,23 @@ class Database extends Component {
 
   handleTickets = () => {
     const { helpscout } = this.props
-    this.props.importTickets(helpscout.conversations.map(c => {
-      let threads = helpscout.threads[c.id]
-      return { ...c, threads: threads }
-    }))
+    this.props.importTickets(helpscout.conversations.filter(c => c.status === 'closed')
+      .map(c => {
+        let threads = helpscout.threads[c.id]
+        return { ...c, threads: threads }
+      }))
   }
 
   render() {
-    const { classes, helpscout, dbConnection, dbResponseDetails, testingButtonDisabled } = this.props
+    const { classes, helpscout, dbConnection, dbResponseDetails, testingButtonDisabled, postButtonDisabled } = this.props
 
     return (
       <div>
         {dbConnection.connected
-          ? <Button color="primary" variant="contained" onClick={this.handleTickets}>Post Tickets to OsTicket</Button>
+          ? <div>
+              <Button disabled={postButtonDisabled} color="primary" variant="contained" onClick={this.handleTickets}>Post Tickets to OsTicket</Button>
+              {postButtonDisabled && <CircularProgress className={classes.progress} />}
+            </div>
           : <div>
             {testingButtonDisabled
               ? <CircularProgress className={classes.progress} />
@@ -96,6 +100,7 @@ function mapStateToProps({ helpscout, dbConnection }) {
       if (cur.affectedRows === 1 && cur.warningCount === 0 && cur.message === '') {
         acc.successes++
       } else {
+        console.log(cur)
         acc.errors.count++
         acc.errors.details.push({
           ticketNumber: cur.ticketNumber,
@@ -107,12 +112,14 @@ function mapStateToProps({ helpscout, dbConnection }) {
   }
 
   let testingButtonDisabled = dbConnection.testing === true ? true : false
+  let postButtonDisabled = dbConnection.loading === true ? true : false
 
   return {
     helpscout,
     dbConnection,
     dbResponseDetails,
-    testingButtonDisabled
+    testingButtonDisabled,
+    postButtonDisabled
   }
 }
 

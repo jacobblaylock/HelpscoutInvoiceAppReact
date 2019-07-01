@@ -30,13 +30,21 @@ Helpscout.prototype.reformatTicketBody = function (ticket) {
         striptags(thread.body.replace(/<br>/g, '\n'))
           .replace(/^\s+$/gm, '\n')
           .replace(/\n{3,10}/g, '\n')
-          .replace(/Our Mission:\s+Enabling medical institutions to reach their full potential by matching the very best technology solutions to their business needs/g, '')
-          .replace(/This transmission may contain information that is privileged, confidential and\/or exempt from disclosure under applicable law\. If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or use of the information contained herein \(including any reliance thereon\) is STRICTLY PROHIBITED\. If you received this transmission in error, please immediately contact the sender and destroy the material in its entirety, whether in electronic or hard copy format\. Thank you\./g, '') +
-        '\n\n'
+          // Poplar Disclaimer
+          .replace(/^NOTE: This E-mail is covered by the Electronic Communications Privacy Act,.*/gm, '')
+          // Cellnetix Disclaimer
+          .replace(/DISCLAIMER: \n^This message is intended for the sole use of the addressee,.*/gm, '')
+          // Bako Disclaimer
+          .replace(/We want to know how we're doing!\nPlease fill out our Client Satisfaction Survey today!/gm, '')
+          // Peak Disclaimer
+          .replace(/Our Mission:\s+Enabling medical institutions to reach their full potential by matching the very best technology solutions to their business needs/gm, '')
+          .replace(/This transmission may contain information that is privileged, confidential and\/or exempt from disclosure under applicable law\. If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or use of the information contained herein \(including any reliance thereon\) is STRICTLY PROHIBITED\. If you received this transmission in error, please immediately contact the sender and destroy the material in its entirety, whether in electronic or hard copy format\. Thank you\./gm, '')
+          .replace(/[^\x00-\x7F]/g, ' ')
+        + '\n\n'
     }
   })
   text = text.replace(/'/g, "''")
-  return iconv.encode(text,'latin1')
+  return iconv.encode(text, 'latin1')
 };
 
 Helpscout.prototype.mysqlOpen = function () {
@@ -98,25 +106,19 @@ Helpscout.prototype.mysqlQuery = function (query, callback) {
 
 Helpscout.prototype.insertTicket = function (ticket, callback) {
   var query;
-  var clientId = ticket.customFields.filter(cf => cf.id === 1241)[0].value
-  var billableHours = ticket.customFields.filter(cf => cf.id === 1240)[0].value
-  if (!clientId) {
-    console.log('NO CLIENT SELECTED')
-    clientId = 0;
-  }
   query = "call helpscoutInsert(" +
     ticket.number + ",'" +
     ticket.closedAt.replace(/T|Z/g, ' ') + "','" +
     //"1905-01-01', '" +
     ticket.assignee.first + "','" +
     ticket.assignee.last + "','" +
-    this.clientMap(clientId) + "','" +
+    this.clientMap(ticket.clientId) + "','" +
     ticket.subject.replace(/'/g, "''") + "','" +
     ticket.status + "','" +
     ticket.createdAt.replace(/T|Z/g, ' ') + "','" +
     ticket.modifiedAt.replace(/T|Z/g, ' ') + "','" +
     this.reformatTicketBody(ticket.threads) + "','" +
-    billableHours + "')"
+    ticket.billableHours + "')"
   // console.log(query)
   // callback(query)
   this.mysqlQuery(query, function (row) {
@@ -129,7 +131,7 @@ Helpscout.prototype.insertTickets = function (callback) {
   var rows = []
   this.threads.forEach(function (ticket) {
     this.insertTicket(ticket, function (row) {
-      rows.push({ticketNumber: ticket.number, ...row})
+      rows.push({ ticketNumber: ticket.number, ...row })
       counter--;
       if (counter === 0) {
         callback(rows);

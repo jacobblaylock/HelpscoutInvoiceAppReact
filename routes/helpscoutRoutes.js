@@ -79,15 +79,25 @@ module.exports = app => {
               return [...acc, ...conversation]
             }, [])
               .map(convo => {
+                var clientId = convo.customFields.find(cf => cf.id === 1241)
+                var billableHours = convo.customFields.find(cf => cf.id === 1240)
                 return {
                   id: convo.id,
                   number: convo.number,
                   status: convo.status,
                   createdAt: convo.createdAt,
-                  closedAt: convo.closedAt,
+                  closedAt: convo.status === 'closed' ? convo.closedAt : '',
                   modifiedAt: convo.userUpdatedAt,
-                  assignee: convo.assignee,
-                  customFields: convo.customFields,
+                  assignee: convo.assignee || {
+                      "type": "user",
+                      "first": "Unassigned",
+                      "last": "Unassigned",
+                      "email": "support@peakmedicaltech.com"
+                  },
+                  clientId: clientId ? clientId.value : "NO CLIENT SELECTED",
+                  billableHours: billableHours
+                    ? (billableHours.value === '' ? 0 : billableHours.value)
+                    : 0,
                   subject: convo.subject,
                   preview: convo.preview,
                   threadLink: convo._links.threads.href

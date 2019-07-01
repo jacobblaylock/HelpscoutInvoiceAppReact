@@ -63,8 +63,10 @@ export const testDbConnection = () => {
 
 export const postThreads = (conversations) => {
   return function (dispatch) {
+    dispatch({ type: actionTypes.DB_LOADING_TICKETS, loading: true })
     axios.post('osticket/importTickets', conversations)
       .then(res => {
+        dispatch({ type: actionTypes.DB_LOADING_TICKETS, loading: false})
         dispatch({ type: actionTypes.POST_THREADS, dbResponse: res.data})
       })
   }
