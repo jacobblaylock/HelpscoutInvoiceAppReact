@@ -7,7 +7,8 @@ passport.use(new OAuth2Strategy({
   tokenURL: 'https://api.helpscout.net/v2/oauth2/token',
   clientID: keys.helpscoutClientID,
   clientSecret: keys.helpscoutClientSecret,
-  callbackURL: "/auth/helpscout/callback"
+  callbackURL: "/auth/helpscout/callback",
+  proxy: true
 },
   (accessToken, refreshToken, profile, done) => {
     var helpscoutConfig = {

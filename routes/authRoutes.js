@@ -9,7 +9,7 @@ module.exports = app => {
 
   app.get(
     '/auth/helpscout/callback',
-    passport.authenticate('oauth2', { session: false, failureRedirect: '/login' }),
+    passport.authenticate('oauth2', { session: false, failureRedirect: '/main' }),
     (req, res) => {
       // promisify(fs.writeFile)('./temp/helpscoutConfig.json', JSON.stringify(req.user))
       //     .then(data => res.redirect('/main'))
