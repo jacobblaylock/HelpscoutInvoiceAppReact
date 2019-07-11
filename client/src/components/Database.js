@@ -40,7 +40,6 @@ const styles = theme => ({
 class Database extends Component {
 
   componentDidMount() {
-    (async () => { console.log(await publicIp.v4())})()
     this.props.testDbConn()
   }
 
@@ -72,7 +71,7 @@ class Database extends Component {
               ? <CircularProgress className={classes.progress} />
               :
               <div>
-                <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost.  Check the console for your current IP.</p>
+                <p>Connection to OsTicket Database failed.  Verify the IP address is whitelisted on BlueHost.</p>
                 <p>{dbConnection.message}</p>
               </div>
             }
