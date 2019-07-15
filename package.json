@@ -8,7 +8,7 @@
     "npm": "6.1.0"
   },
   "scripts": {
-    "startAws": "NODE_ENV=production PORT=443 HELPSCOUT_CLIENT_ID=ba68a8b5ca884a34ad595d1664b3bb93 HELPSCOUT_CLIENT_SECRET=09cbc0d1b5b241779b1df651e7c55df1 node index.js",
+    "startAws": "NODE_ENV=production PORT=80 HELPSCOUT_CLIENT_ID=ba68a8b5ca884a34ad595d1664b3bb93 HELPSCOUT_CLIENT_SECRET=09cbc0d1b5b241779b1df651e7c55df1 node index.js",
     "start": "node index.js",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
