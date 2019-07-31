@@ -18,7 +18,7 @@ export const getMailboxes = () => {
     axios.get('helpscout/mailboxes')
       .then(res => dispatch({ type: actionTypes.GET_MAILBOXES, mailboxes: res.data }))
       .catch(error => {
-        dispatch(push('/login'))            
+        dispatch(push('/loginFailed'))            
       })
   }
 }
@@ -34,7 +34,7 @@ export const listConversations = (params) => {
       })
       .catch(error => { 
         dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: []})
-        dispatch(push('/login'))   
+        dispatch(push('/loginFailed'))   
         return error
       })
   }
