@@ -18,7 +18,8 @@ export const getMailboxes = () => {
     axios.get('helpscout/mailboxes')
       .then(res => dispatch({ type: actionTypes.GET_MAILBOXES, mailboxes: res.data }))
       .catch(error => {
-        dispatch(push('/loginFailed'))            
+        dispatch(push('/loginFailed'))    
+        console.log(error)
       })
   }
 }
@@ -33,8 +34,6 @@ export const listConversations = (params) => {
         dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data})
       })
       .catch(error => { 
-        dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: true })
-        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: [] })        
         dispatch(push('/loginFailed'))   
         console.log(error)
       })
@@ -55,9 +54,7 @@ export const getThreads = (links) => {
         dispatch({ type: actionTypes.GET_THREADS, threads: threads })
       })
       .catch(error => {
-        dispatch({ type: actionTypes.GET_THREADS, threads: {} })
         dispatch(push('/loginFailed'))    
-        return error
       })
   }
 }
