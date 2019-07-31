@@ -6,7 +6,7 @@ import { Paper, Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { getMailboxes, listConversations, getThreads } from '../actions'
 import TicketTable from '../components/TicketTable'
-import Database from '../components/Database'
+import Database from '../components/Database' 
 
 const styles = theme => ({
   root: {
@@ -41,8 +41,8 @@ const styles = theme => ({
 
 class Main extends Component {
   state = {
-    startDate: '2019-06-03',
-    endDate: '2019-07-01',
+    startDate: '2019-07-01',
+    endDate: '2019-08-01',
     conversationButtonDisabled: false,
     threadButtonDisabled: false
   }

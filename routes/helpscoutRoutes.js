@@ -3,8 +3,8 @@ const axios = require('axios')
 const fs = require("fs")
 
 // Interceptor to handle API limit
-function retryCall(url, headers) {
-  return axios.get(url, headers)
+function retryCall(url, config) {
+  return axios.get(url, config)
 }
 
 axios.interceptors.response.use(response => {
@@ -21,29 +21,13 @@ axios.interceptors.response.use(response => {
           .catch(Promise.reject(error))
       })
     } else if (error.response.status === 401) {
-      console.log('AUTHORIZATION TOKEN EXPIRED')
       return Promise.reject('Authorization Token Expired: ' + error)
     } else {
       console.log(`Error: ${error.response.status} - ${error.response.data.message}`)
       return Promise.reject(error)
     }
   } else {
-    if (error.code === 'ECONNREFUSED') {
-      console.log('ECONN WAS REFUSED')
-      promisify(fs.readFile)('./temp/helpscoutConfig.json', 'utf-8')
-        .then(file => {
-          let config = JSON.parse(file)
-          return retryCall(`${config.baseURL}${error.config.url}`, config.headers)
-            .then()
-            .catch(Promise.reject(error))
-        })
-        .catch(error => {
-          console.log(error)
-          Promise.reject(error)
-        })
-    } else {
-      return Promise.reject(error);
-    }
+    return Promise.reject(error)
   }
 })
 
@@ -107,7 +91,10 @@ module.exports = app => {
           })
       })
       .catch(error => {
+        console.log('ERROR CAUGHT!!!!!')
         console.log(error)
+        res.redirect('/')
+        return 'ERROR'
       })
   })
 

@@ -5,6 +5,8 @@ const axios = require('axios')
 
 module.exports = app => {
 
+  let axiosInterceptor
+
   app.get('/auth/helpscout', passport.authenticate('oauth2'))
 
   app.get(
@@ -12,14 +14,18 @@ module.exports = app => {
     passport.authenticate('oauth2', { session: false, failureRedirect: '/main' }),
     (req, res) => {
       // promisify(fs.writeFile)('./temp/helpscoutConfig.json', JSON.stringify(req.user))
-      //     .then(data => res.redirect('/main'))
-      axios.interceptors.request.use(function (config) {
+      //     .then(data => res.redirect('/main')) 
+
+      if(axiosInterceptor !== undefined) {
+        axios.interceptors.request.eject(axiosInterceptor)
+      }
+      axiosInterceptor = axios.interceptors.request.use(function (config) {
         config.headers.Authorization = req.user.headers.Authorization
         config.baseURL = req.user.baseURL
         return config
       }, function (error) {
         // Do something with request error
-        return Promise.reject(error)
+        return Promise.reject(error) 
       })
       res.redirect('/main')
     }

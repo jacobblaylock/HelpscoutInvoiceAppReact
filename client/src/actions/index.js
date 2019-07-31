@@ -1,7 +1,9 @@
 import axios from 'axios'
 import * as actionTypes from './types'
+import { push } from 'connected-react-router'
 
-export const getAuth = () => {
+
+export const getAuth = () => { 
   return function (dispatch) {
     axios.get('helpscout/accessToken')
       .then(res => {
@@ -15,6 +17,9 @@ export const getMailboxes = () => {
   return function (dispatch) {
     axios.get('helpscout/mailboxes')
       .then(res => dispatch({ type: actionTypes.GET_MAILBOXES, mailboxes: res.data }))
+      .catch(error => {
+        dispatch(push('/login'))            
+      })
   }
 }
 
@@ -23,9 +28,14 @@ export const listConversations = (params) => {
     dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: false})
     dispatch({ type: actionTypes.LOADING_THREADS })
     axios.get('helpscout/conversations', { params })
-      .then(res => { 
+      .then(res => {
         dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: true})
         dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data })
+      })
+      .catch(error => { 
+        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: []})
+        dispatch(push('/login'))   
+        return error
       })
   }
 }
@@ -35,7 +45,7 @@ export const getThreads = (links) => {
     dispatch({ type: actionTypes.LOADING_THREADS, loaded: false, count: links.length })
     axios.all(links.map(link => axios.get('helpscout/thread', { params: { link } })))
       .then(res => {
-        let threads = res.reduce((acc, cur) => {
+        let threads = res.reduce((acc, cur) => { 
           
           let thread = cur.data
           return { ...acc, ...thread}
@@ -44,7 +54,8 @@ export const getThreads = (links) => {
         dispatch({ type: actionTypes.GET_THREADS, threads: threads })
       })
       .catch(error => {
-        console.log(error)
+        dispatch({ type: actionTypes.GET_THREADS, threads: {} })
+        dispatch(push('/loginFailed'))    
         return error
       })
   }

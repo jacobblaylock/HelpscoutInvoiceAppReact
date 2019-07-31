@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser');
-require('./services/passport')
+require('./services/passport') 
 
 const app = express()
 app.use(bodyParser.json({limit: '10mb', extended: true}))
@@ -9,7 +9,6 @@ require('./routes/helpscoutRoutes')(app)
 require('./routes/osticketRoutes')(app)
 
 // app.get('/', (req, res) => res.send('<h1>testing OAuth2 with Helpscout ... Good Luck!<h1>'))
-
 if (process.env.NODE_ENV === 'production') {
   // Express will serve up production assets
   app.use(express.static('client/build'));
