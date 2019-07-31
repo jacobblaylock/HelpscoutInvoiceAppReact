@@ -21,13 +21,15 @@ axios.interceptors.response.use(response => {
           .catch(Promise.reject(error))
       })
     } else if (error.response.status === 401) {
-      return Promise.reject('Authorization Token Expired: ' + error)
+      console.log('Returned 1')
+      return Promise.reject({ status: 401, message: 'Authorization Token Expired' })
     } else {
-      console.log(`Error: ${error.response.status} - ${error.response.data.message}`)
-      return Promise.reject(error)
+      console.log('Returned 2')
+      return Promise.reject({ status: 404, message: 'Error connecting to Helpscout' })
     }
   } else {
-    return Promise.reject(error)
+    console.log('Returned 3')
+    return Promise.reject({ status: 404, message: 'Error connecting to Helpscout'})
   }
 })
 
@@ -91,10 +93,7 @@ module.exports = app => {
           })
       })
       .catch(error => {
-        console.log('ERROR CAUGHT!!!!!')
-        console.log(error)
-        res.redirect('/')
-        return 'ERROR'
+        res.status(error.status).send(error.message)
       })
   })
 
@@ -105,8 +104,7 @@ module.exports = app => {
         res.send({ [conversationId]: response.data._embedded.threads })
       })
       .catch(error => {
-        console.log(error)
-        return error
+        res.status(error.status).send(error.message)
       })
   })
 }

@@ -30,12 +30,13 @@ export const listConversations = (params) => {
     axios.get('helpscout/conversations', { params })
       .then(res => {
         dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: true})
-        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data })
+        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: res.data})
       })
       .catch(error => { 
-        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: []})
+        dispatch({ type: actionTypes.LOADING_CONVERSATIONS, loaded: true })
+        dispatch({ type: actionTypes.LIST_CONVERSATIONS, conversations: [] })        
         dispatch(push('/loginFailed'))   
-        return error
+        console.log(error)
       })
   }
 }
