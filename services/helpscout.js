@@ -119,7 +119,7 @@ Helpscout.prototype.insertTicket = function (ticket, callback) {
     ticket.modifiedAt.replace(/T|Z/g, ' ') + "','" +
     this.reformatTicketBody(ticket.threads) + "','" +
     ticket.billableHours + "')"
-  // console.log(query)
+    console.log(query)
   // callback(query)
   this.mysqlQuery(query, function (row) {
     callback(row)

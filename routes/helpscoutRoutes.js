@@ -51,7 +51,7 @@ module.exports = app => {
     const params = req.query
     axios.get('/conversations', { params })
       .then(response => {
-        return { ...response.data.page, link: response.data._links.page.href }
+        return { ...response.data.page, link: response.data._links.page.href.replace('{&page}', '') }
       })
       .then(response => {
         let links = []
