@@ -1,6 +1,6 @@
 module.exports = {
   connectionLimit: 5,
-  host: "box867.bluehost.com",
+  host: "box2252.bluehost.com",
   user: "temporc7_tech",
   password: "1YeVF56r9aUg0QCLGdmF",
   database: "temporc7_tech",
