@@ -49,7 +49,10 @@ module.exports = {
     67494: "mTuitive Healthcare",
     72558: "Gestalt",
     75590: "Vista Pathology",
-    104190: "Apollo Medflight"
+    104190: "Apollo Medflight",
+    121033: "Crush The Curve",
+    121034: "Progenitor",
+    121036: "Cole Diagnostics"
   }
 }
 
