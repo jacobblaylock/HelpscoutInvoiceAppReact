@@ -52,7 +52,8 @@ module.exports = {
     104190: "Apollo Medflight",
     121033: "Crush The Curve",
     121034: "Progenitor",
-    121036: "Cole Diagnostics"
+    121036: "Cole Diagnostics",
+    136346: "BOISE STATE UNIVERSITY"
   }
 }
 
