@@ -53,7 +53,9 @@ module.exports = {
     121033: "Crush The Curve",
     121034: "Progenitor",
     121036: "Cole Diagnostics",
-    136346: "BOISE STATE UNIVERSITY"
+    136346: "BOISE STATE UNIVERSITY",
+    147649: "AMARILLO PATHOLOGY GROUP",
+    147628: "Newport Harbor Medical Group"
   }
 }
 
